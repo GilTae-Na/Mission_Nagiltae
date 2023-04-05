@@ -8,19 +8,19 @@
 
 #### N주차 미션 요약
 [접근 방법]
+
 - 점프 투 스프링 실습과정에서 배운 삭제 과정을 도입하기로 함
 - 먼저 전체 코드 대충 훑어보고 실행시켜서 동작하는 구조 확인(java코드와 db확인)
-
 - 인스타 아이디 입력했을때 '좋아요' 관계에 어느 db에 저장되는지 확인 
->-> Likable_person에 저장됨
--> html 파일 확인후 url 코드 끝쪽에 delete/3 이라고 되있음 
--> DB에서 3번 튜플인것 확인 
--> 3번 튜플에 5번(나의 인스타 아이디), 6번(좋아하는 인스타 아이디)이 저장되있구나 이거만 지우면 되겠네?
--> Likable_person에서 findById로 게시물 찾아와서(service), controller로 토스 
--> controller에서 optional null인지 확인하고 rq에서 유저이름과 principal 유저이름 같은지 확인(불일치시 알림창)
--> 조건 만족하면 delete 메소드 실행
--> sql쿼리문 충족을 위해 deleteById 사용
--> @Transactional 붙여서 delete문 동작하도록 확인
+- Likable_person에 저장됨
+- html 파일 확인후 url 코드 끝쪽에 delete/3 이라고 되있음 
+- DB에서 3번 튜플인것 확인 
+- 3번 튜플에 5번(나의 인스타 아이디), 6번(좋아하는 인스타 아이디)이 저장되있구나 이거만 지우면 되겠네?
+- Likable_person에서 findById로 게시물 찾아와서(service), controller로 토스 
+- controller에서 optional null인지 확인하고 rq에서 유저이름과 principal 유저이름 같은지 확인(불일치시 알림창)
+- 조건 만족하면 delete 메소드 실행
+- sql쿼리문 충족을 위해 deleteById 사용
+- @Transactional 붙여서 delete문 동작하도록 확인
 
 [특이사항]
 sevice에서 delete메소드에 @Transactional 이거 한줄 안써서 2시간을 날렸습니다. 사용할때와 개념파악이 부족한 느낌입니다.
