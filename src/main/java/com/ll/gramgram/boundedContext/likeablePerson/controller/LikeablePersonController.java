@@ -9,13 +9,19 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/likeablePerson")
@@ -58,5 +64,20 @@ public class LikeablePersonController {
         }
 
         return "usr/likeablePerson/list";
+    }
+
+
+    @PreAuthorize("isAuthenticated()") //로그인한 사람만 가능
+    @GetMapping("/delete/{id}") //LikeablePerson DB번호 url로 가져오기
+    public String likePersonDelete(Principal principal, @PathVariable("id") long id) { //이 id는 DB번호임
+        Optional<LikeablePerson> likeablePerson = this.likeablePersonService.findById((int) id); //유저번호로 가져와서 저장
+
+        if(!rq.getMember().getUsername().equals(principal.getName())){
+            return rq.redirectWithMsg("/likeablePerson/list", "삭제 권한이 없습니다.");
+        }
+
+        this.likeablePersonService.delete(likeablePerson.get().getId().intValue());
+        return rq.redirectWithMsg("/likeablePerson/list", "삭제되었습니다.");
+
     }
 }
