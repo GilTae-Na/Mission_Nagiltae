@@ -72,10 +72,6 @@ public class LikeablePersonController {
     public String likePersonDelete(Principal principal, @PathVariable("id") long id) { //이 id는 DB번호임
         Optional<LikeablePerson> likeablePerson = this.likeablePersonService.findById((int) id); //유저번호로 가져와서 저장
 
-        if(likeablePerson.isEmpty()){
-            return rq.redirectWithMsg("/likeablePerson/list", "이미 삭제 되었습니다.");
-        }
-
         if(!rq.getMember().getUsername().equals(principal.getName())){
             return rq.redirectWithMsg("/likeablePerson/list", "삭제 권한이 없습니다.");
         }
