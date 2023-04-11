@@ -38,12 +38,19 @@ public class LikeablePersonService {
             return RsData.of("F-3", "호감상대는 10명을 넘어갈 수 없습니다.");
         }
 
-        for(LikeablePerson l : fromLikeablePeople){
-            if(l.getToInstaMemberUsername().equals(username) && l.getAttractiveTypeCode() == attractiveTypeCode){
+        for(LikeablePerson likeablePerson : fromLikeablePeople){
+            if(duplicateUsername(likeablePerson, username, attractiveTypeCode)){ //case 4
                 // 입력한 이름이 내가 좋아하는 사람 목록에 이미 있고, 호감코드까지 같을때
                 return RsData.of("F-4", "중복으로 호감표시를 할 수 없습니다.");
             }
+            else if(updateAttractCode(likeablePerson, username, attractiveTypeCode)){ //case 6
+                String preAttractCode = likeablePerson.getAttractiveTypeDisplayName(); //이전 매력코드
+                likeablePerson.setAttractiveTypeCode(attractiveTypeCode); //매력코드 업데이트
+                String postAttractCode = likeablePerson.getAttractiveTypeDisplayName(); //바뀐 매력코드
+                return RsData.of("S-2", String.format("%s 에 대한 호감사유를 %s에서 %s로 변경합니다.", username, preAttractCode, postAttractCode));
+            }
         }
+
 
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
@@ -68,11 +75,23 @@ public class LikeablePersonService {
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
 
+    public boolean duplicateUsername(LikeablePerson likeablePerson, String username, int attractiveTypeCode) {
+        if (likeablePerson.getToInstaMemberUsername().equals(username) && likeablePerson.getAttractiveTypeCode() == attractiveTypeCode) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updateAttractCode(LikeablePerson likeablePerson, String username, int attractiveTypeCode){
+        if(likeablePerson.getToInstaMemberUsername().equals(username) && likeablePerson.getAttractiveTypeCode() != attractiveTypeCode){
+            return true;
+        }
+        return false;
+    }
+
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
-
-
 
     public Optional<LikeablePerson> findById(Long id) {
         return likeablePersonRepository.findById(id);
@@ -99,4 +118,8 @@ public class LikeablePersonService {
 
         return RsData.of("S-1", "삭제가능합니다.");
     }
+
+
+
+
 }
