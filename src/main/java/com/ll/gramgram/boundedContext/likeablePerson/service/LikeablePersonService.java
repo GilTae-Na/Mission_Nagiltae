@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,9 +45,12 @@ public class LikeablePersonService {
                 return RsData.of("F-4", "중복으로 호감표시를 할 수 없습니다.");
             }
             else if(updateAttractCode(likeablePerson, username, attractiveTypeCode)){ //case 6
+
                 String preAttractCode = likeablePerson.getAttractiveTypeDisplayName(); //이전 매력코드
                 likeablePerson.setAttractiveTypeCode(attractiveTypeCode); //매력코드 업데이트
+                likeablePerson.setModifyDate(LocalDateTime.now());//수정날짜 업데이트
                 String postAttractCode = likeablePerson.getAttractiveTypeDisplayName(); //바뀐 매력코드
+
                 return RsData.of("S-2", String.format("%s 에 대한 호감사유를 %s에서 %s로 변경합니다.", username, preAttractCode, postAttractCode));
             }
         }
@@ -75,6 +79,7 @@ public class LikeablePersonService {
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
 
+    //중복 참거짓 메소드, 코드가 길어 나눴다.
     public boolean duplicateUsername(LikeablePerson likeablePerson, String username, int attractiveTypeCode) {
         if (likeablePerson.getToInstaMemberUsername().equals(username) && likeablePerson.getAttractiveTypeCode() == attractiveTypeCode) {
             return true;
@@ -82,6 +87,7 @@ public class LikeablePersonService {
         return false;
     }
 
+    //수정 참거짓 메소드, 코드가 길어 나눴다.
     public boolean updateAttractCode(LikeablePerson likeablePerson, String username, int attractiveTypeCode){
         if(likeablePerson.getToInstaMemberUsername().equals(username) && likeablePerson.getAttractiveTypeCode() != attractiveTypeCode){
             return true;

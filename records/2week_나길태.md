@@ -28,16 +28,31 @@
 #### 체크리스트
 -  [√] 테스트 케이스 만들기
 -  [√] 데이터 양방향 매핑 파악
--  [√] RsData를 통한 메세지 전송
+-  [√] RsData를 통한 메세지 전송 -> rq.historyBack으로 구현가능
 -  [√] 테스트 케이스 만들기
 
 
 ---------------------------------------------------------------------------
 #### N주차 미션 요약
 [접근 방법]
+InstaMember과 LikablePerson에 있는 양방향 관계에서 어떤 방식으로 데이터를 꺼내올지 고민을 했다
+1:N 관계로 실제 db에 저장되는건 ID간의 관계가 저장되었다. (from_insta_member_id, to_insta_member_id)
+이걸 이해하고 바로toToInstaMemberUsername으로 접근해서 값을 가져올수 있었다.
 
+case:4 
+- rq.member로 InstaMember를 가져올 수 있고 여기서 또 getFromLikeablePeople()로 유저가 좋아하는 호감목록을 가져올 수 있다.
+- LikablePerson 리스트 형태인데 여기서 for each 문으로 각각 getToInstaMemberUsername()를 입력된 Username과 비교해 등록된 인스타아이디인지 확인한다.
+- 마찬가지로 AttractCode도 비교한다.
+- 둘다 겹칠경우 RsData로 F-4 실패코드를 날린다.
+case:5 
+- member.getInstaMember().getFromLikeablePeople() = 내가 좋아하는 사람들 목록, size()로 크기를 구할 수있다.
+case:6
+- case:4 수행중 이름은 겹치는데 AttractCode가 겹치지 않을경우 
+- 이전 AttractCode와 바뀐 AttractCode를 저장해 String.format으로 출력했다.
+- 바뀐 attractCode저장은 entity에 setter를 넣어주었다.
 
 [특이사항]
+
 
 
 참고: [Refactoring]

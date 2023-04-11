@@ -25,6 +25,7 @@ public class LikeablePerson {
     @CreatedDate
     private LocalDateTime createDate;
     @LastModifiedDate
+    @Setter
     private LocalDateTime modifyDate;
 
     @ManyToOne
