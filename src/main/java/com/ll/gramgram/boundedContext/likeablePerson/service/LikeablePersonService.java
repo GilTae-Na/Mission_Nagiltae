@@ -38,6 +38,13 @@ public class LikeablePersonService {
             return RsData.of("F-3", "호감상대는 10명을 넘어갈 수 없습니다.");
         }
 
+        for(LikeablePerson l : fromLikeablePeople){
+            if(l.getToInstaMemberUsername().equals(username) && l.getAttractiveTypeCode() == attractiveTypeCode){
+                // 입력한 이름이 내가 좋아하는 사람 목록에 이미 있고, 호감코드까지 같을때
+                return RsData.of("F-4", "중복으로 호감표시를 할 수 없습니다.");
+            }
+        }
+
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
