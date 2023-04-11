@@ -22,7 +22,7 @@ spring:
             redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             client-authentication-method: POST
           google:
-            redirect-uri: http://localhost:8080/oauth2/authorization/google
+            redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             client-name: Google
             scope: profile
         provider:

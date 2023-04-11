@@ -22,12 +22,20 @@ public class LikeablePersonService {
 
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
+
+        List<LikeablePerson> fromLikeablePeople = member.getInstaMember().getFromLikeablePeople();
+        //현제 유저가 좋아하는 사람 리스트
+
         if (member.hasConnectedInstaMember() == false) {
-            return RsData.of("F-2", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
+            return RsData.of("F-1", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
         }
 
         if (member.getInstaMember().getUsername().equals(username)) {
-            return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
+            return RsData.of("F-2", "본인을 호감상대로 등록할 수 없습니다.");
+        }
+
+        if(fromLikeablePeople.size()>=10){ //case 5
+            return RsData.of("F-3", "호감상대는 10명을 넘어갈 수 없습니다.");
         }
 
         InstaMember fromInstaMember = member.getInstaMember();
@@ -56,6 +64,8 @@ public class LikeablePersonService {
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
+
+
 
     public Optional<LikeablePerson> findById(Long id) {
         return likeablePersonRepository.findById(id);

@@ -217,4 +217,47 @@ public class LikeablePersonControllerTests {
 
         assertThat(likeablePersonService.findById(1L).isPresent()).isEqualTo(true);
     }
+
+    @Test
+    @DisplayName("중복 호감표시 제한") //case 4
+    @WithUserDetails("user3")
+    void t009() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/likeablePerson/add")
+                                .with(csrf())
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is4xxClientError()) //400오류 : 10개 이상등록하면 뻑나야함
+        ;
+
+    }
+
+
+    @Test
+    @DisplayName("호감상대 10명 제한") //case 5
+    @WithUserDetails("user3")
+    void t010() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/likeablePerson/add")
+                                .with(csrf())
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is4xxClientError()) //400오류 : 10개 이상등록하면 뻑나야함
+        ;
+
+    }
 }

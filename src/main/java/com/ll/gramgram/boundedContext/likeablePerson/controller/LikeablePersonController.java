@@ -24,7 +24,7 @@ public class LikeablePersonController {
     private final LikeablePersonService likeablePersonService;
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/add")
+    @GetMapping("/add") //폼 렌더링
     public String showAdd() {
         return "usr/likeablePerson/add";
     }
@@ -47,6 +47,7 @@ public class LikeablePersonController {
 
         return rq.redirectWithMsg("/likeablePerson/list", createRsData);
     }
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
