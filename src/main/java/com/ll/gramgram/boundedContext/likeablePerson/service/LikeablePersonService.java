@@ -28,7 +28,7 @@ public class LikeablePersonService {
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
 
         List<LikeablePerson> fromLikeablePeople = member.getInstaMember().getFromLikeablePeople();
-        //현제 유저가 좋아하는 사람 리스트
+        //현재 유저가 좋아하는 사람 리스트
 
         if (member.hasConnectedInstaMember() == false) {
             return RsData.of("F-1", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
@@ -48,6 +48,7 @@ public class LikeablePersonService {
                 return RsData.of("F-4", "중복으로 호감표시를 할 수 없습니다.");
             }
             else if(updateAttractCode(likeablePerson, username, attractiveTypeCode)){ //case 6
+                System.out.println("****************************");
 
                 String preAttractCode = likeablePerson.getAttractiveTypeDisplayName(); //이전 매력코드
                 likeablePerson.setAttractiveTypeCode(attractiveTypeCode); //매력코드 업데이트
@@ -84,7 +85,8 @@ public class LikeablePersonService {
 
     //중복 참거짓 메소드, 코드가 길어 나눴다.
     public boolean duplicateUsername(LikeablePerson likeablePerson, String username, int attractiveTypeCode) {
-        if (likeablePerson.getToInstaMemberUsername().equals(username) && likeablePerson.getAttractiveTypeCode() == attractiveTypeCode) {
+        if (likeablePerson.getToInstaMember().getUsername().equals(username) && likeablePerson.getAttractiveTypeCode() == attractiveTypeCode) {
+            //현재 유저가 좋아하는 사람 리스트(likeablePerson) 에 있는 ToInstaMember(InstaMember)에 들어가서 username받아와서 대조
             return true;
         }
         return false;
@@ -92,7 +94,7 @@ public class LikeablePersonService {
 
     //수정 참거짓 메소드, 코드가 길어 나눴다.
     public boolean updateAttractCode(LikeablePerson likeablePerson, String username, int attractiveTypeCode){
-        if(likeablePerson.getToInstaMemberUsername().equals(username) && likeablePerson.getAttractiveTypeCode() != attractiveTypeCode){
+        if(likeablePerson.getToInstaMember().getUsername().equals(username) && likeablePerson.getAttractiveTypeCode() != attractiveTypeCode){
             return true;
         }
         return false;
