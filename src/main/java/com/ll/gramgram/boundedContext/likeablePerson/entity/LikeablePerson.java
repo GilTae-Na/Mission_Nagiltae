@@ -25,6 +25,7 @@ public class LikeablePerson {
     @CreatedDate
     private LocalDateTime createDate;
     @LastModifiedDate
+    @Setter
     private LocalDateTime modifyDate;
 
     @ManyToOne
@@ -37,6 +38,7 @@ public class LikeablePerson {
     private InstaMember toInstaMember; // 호감을 받은 사람(인스타 멤버)
     private String toInstaMemberUsername; // 혹시 몰라서 기록
 
+    @Setter // 수정을 위해
     private int attractiveTypeCode; // 매력포인트(1=외모, 2=성격, 3=능력)
 
     public String getAttractiveTypeDisplayName() {

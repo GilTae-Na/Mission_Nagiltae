@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.likeablePerson.service;
 
+import com.ll.gramgram.base.appConfig.AppConfig;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,16 +21,44 @@ import java.util.Optional;
 public class LikeablePersonService {
     private final LikeablePersonRepository likeablePersonRepository;
     private final InstaMemberService instaMemberService;
+    private final AppConfig appConfig;
+
 
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
+
+        List<LikeablePerson> fromLikeablePeople = member.getInstaMember().getFromLikeablePeople();
+        //현재 유저가 좋아하는 사람 리스트
+
         if (member.hasConnectedInstaMember() == false) {
-            return RsData.of("F-2", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
+            return RsData.of("F-1", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
         }
 
         if (member.getInstaMember().getUsername().equals(username)) {
-            return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
+            return RsData.of("F-2", "본인을 호감상대로 등록할 수 없습니다.");
         }
+
+        if(fromLikeablePeople.size()>= AppConfig.getLikablePersonFromMax()){ //case 5
+            return RsData.of("F-3", "호감상대는 10명을 넘어갈 수 없습니다.");
+        }
+
+        for(LikeablePerson likeablePerson : fromLikeablePeople){
+            if(duplicateUsername(likeablePerson, username, attractiveTypeCode)){ //case 4
+                // 입력한 이름이 내가 좋아하는 사람 목록에 이미 있고, 호감코드까지 같을때
+                return RsData.of("F-4", "중복으로 호감표시를 할 수 없습니다.");
+            }
+            else if(updateAttractCode(likeablePerson, username, attractiveTypeCode)){ //case 6
+                System.out.println("****************************");
+
+                String preAttractCode = likeablePerson.getAttractiveTypeDisplayName(); //이전 매력코드
+                likeablePerson.setAttractiveTypeCode(attractiveTypeCode); //매력코드 업데이트
+                likeablePerson.setModifyDate(LocalDateTime.now());//수정날짜 업데이트
+                String postAttractCode = likeablePerson.getAttractiveTypeDisplayName(); //바뀐 매력코드
+
+                return RsData.of("S-2", String.format("%s 에 대한 호감사유를 %s에서 %s로 변경합니다.", username, preAttractCode, postAttractCode));
+            }
+        }
+
 
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
@@ -51,6 +81,23 @@ public class LikeablePersonService {
         toInstaMember.addToLikeablePerson(likeablePerson);
 
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
+    }
+
+    //중복 참거짓 메소드, 코드가 길어 나눴다.
+    public boolean duplicateUsername(LikeablePerson likeablePerson, String username, int attractiveTypeCode) {
+        if (likeablePerson.getToInstaMember().getUsername().equals(username) && likeablePerson.getAttractiveTypeCode() == attractiveTypeCode) {
+            //현재 유저가 좋아하는 사람 리스트(likeablePerson) 에 있는 ToInstaMember(InstaMember)에 들어가서 username받아와서 대조
+            return true;
+        }
+        return false;
+    }
+
+    //수정 참거짓 메소드, 코드가 길어 나눴다.
+    public boolean updateAttractCode(LikeablePerson likeablePerson, String username, int attractiveTypeCode){
+        if(likeablePerson.getToInstaMember().getUsername().equals(username) && likeablePerson.getAttractiveTypeCode() != attractiveTypeCode){
+            return true;
+        }
+        return false;
     }
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
@@ -82,4 +129,8 @@ public class LikeablePersonService {
 
         return RsData.of("S-1", "삭제가능합니다.");
     }
+
+
+
+
 }

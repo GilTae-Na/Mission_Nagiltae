@@ -1,4 +1,4 @@
-<html layout:decorate="~{usr/layout/layout.html}">
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="http://thymeleaf.org">
 
 <head>
     <title>당신이 좋아하는 사람들</title>
@@ -16,12 +16,19 @@
     </th:block>
 
     <th:block th:if="${@rq.member.hasConnectedInstaMember}">
+        <span class="badge" th:text="|나를 좋아하는 사람의 수 : ${#lists.size(@rq.member.instaMember.toLikeablePeople)}|"></span>
+        <span class="badge" th:text="|내가 좋아하는 사람의 수 : ${#lists.size(@rq.member.instaMember.fromLikeablePeople)}|"></span>
+
         <ul>
-            <li th:each="likeablePerson: ${likeablePeople}">
-                <span class="toInstaMember_username" th:text="${likeablePerson.toInstaMember.username}"></span>
-                <span class="toInstaMember_attractiveTypeDisplayName"
+            <li th:each="likeablePerson: ${likeablePeople}" class="p-10 max-w-sm flex flex-col gap-4">
+                <div>내가 좋아하는 사람의 ID :
+                    <span class="badge toInstaMember_username" th:text="${likeablePerson.toInstaMember.username}"></span>
+                </div>
+                <div>매력 포인트 :
+                    <span class="toInstaMember_attractiveTypeDisplayName"
                       th:text="${likeablePerson.attractiveTypeDisplayName}"></span>
-                <a href="javascript:;" onclick="if ( confirm('정말로 삭제하시겠습니까?') ) $(this).next().submit();">삭제</a>
+                </div>
+                <button class="btn" href="javascript:;" onclick="if ( confirm('정말로 삭제하시겠습니까?') ) $(this).next().submit();">삭제</button>
                 <form hidden th:action="@{|/likeablePerson/${likeablePerson.id}|}" method="POST">
                     <input type="hidden" name="_method" value="delete">
                 </form>
