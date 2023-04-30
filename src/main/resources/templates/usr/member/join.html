@@ -1,4 +1,4 @@
-<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="http://thymeleaf.org">
+<html layout:decorate="~{usr/layout/layout.html}">
 
 <head>
     <title>회원가입</title>
@@ -6,8 +6,7 @@
 
 <body>
 
-<main layout:fragment="main">
-
+<main layout:fragment="main" class="flex-grow flex items-center justify-center">
     <script>
         function JoinForm__submit(form) {
             // username 이(가) 올바른지 체크
@@ -39,6 +38,14 @@
             if (form.password.value.length < 4) {
                 toastWarning('비밀번호를 4자 이상 입력해주세요.');
                 form.password.focus();
+                return;
+            }
+
+            form.passwordConfirm.value = form.passwordConfirm.value.trim();
+
+            if (form.password.value != form.passwordConfirm.value) {
+                toastWarning('비밀번호 확인이 일치하지 않습니다.');
+                form.passwordConfirm.focus();
                 return;
             }
 
@@ -108,4 +115,3 @@
 </body>
 
 </html>
-

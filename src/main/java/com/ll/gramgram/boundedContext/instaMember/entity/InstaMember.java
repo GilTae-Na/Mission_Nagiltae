@@ -6,26 +6,18 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
-
 @SuperBuilder
 @NoArgsConstructor
-@ToString(callSuper = true)
+@ToString(callSuper = true)//상위 클래스 까지 출력? 위해
 @Entity
 @Getter
 public class InstaMember extends InstaMemberBase{
     @Column(unique = true)
     private String username;
-    @Setter
-    private String gender;
 
     @OneToMany(mappedBy = "fromInstaMember", cascade = {CascadeType.ALL})
     @OrderBy("id desc") // 정렬
@@ -35,7 +27,6 @@ public class InstaMember extends InstaMemberBase{
 
     @OneToMany(mappedBy = "toInstaMember", cascade = {CascadeType.ALL})
     @OrderBy("id desc") // 정렬
-    @LazyCollection(LazyCollectionOption.EXTRA)
     @Builder.Default // @Builder 가 있으면 ` = new ArrayList<>();` 가 작동하지 않는다. 그래서 이걸 붙여야 한다.
     private List<LikeablePerson> toLikeablePeople = new ArrayList<>();
 
@@ -60,6 +51,13 @@ public class InstaMember extends InstaMemberBase{
             case "W" -> "여성";
             default -> "남성";
         };
+    }
+
+    public String getGenderDisplayNameWithIcon() {
+        return switch (gender) {
+            case "W" -> "<i class=\"fa-solid fa-person-dress\"></i>";
+            default -> "<i class=\"fa-solid fa-person\"></i>";
+        } + "&nbsp;" + getGenderDisplayName();
     }
 
     public void increaseLikesCount(String gender, int attractiveTypeCode) {

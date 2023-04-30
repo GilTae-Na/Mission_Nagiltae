@@ -10,13 +10,18 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.Date;
 
 @Component
+// 스프링에서 관리하는 빈임, 빈에 등록할거임
 @RequestScope
+//요청(request)이 들어올 때마다 새로운 인스턴스가 생성되어
+// 요청에 대해 새로운 빈 인스턴스를 생성하고 관리합니다.
+//빈 스코프(Bean Scope)란, 빈이 생성되고 유지되는 범위
 public class Rq {
     private final MemberService memberService;
     private final HttpServletRequest req;
@@ -39,6 +44,21 @@ public class Rq {
         } else {
             this.user = null;
         }
+    }
+
+    public boolean isAdmin() {
+        if (isLogout()) return false;
+
+        return getMember().isAdmin();
+    }
+
+    public boolean isRefererAdminPage() {
+        SavedRequest savedRequest = (SavedRequest) session.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+
+        if (savedRequest == null) return false;
+
+        String referer = savedRequest.getRedirectUrl();
+        return referer != null && referer.contains("/adm");
     }
 
     // 로그인 되어 있는지 체크
