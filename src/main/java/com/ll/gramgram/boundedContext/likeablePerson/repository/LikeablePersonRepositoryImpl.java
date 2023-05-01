@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import static com.ll.gramgram.boundedContext.likeablePerson.entity.QLikeablePerson.likeablePerson;
 
+
 @RequiredArgsConstructor
 public class LikeablePersonRepositoryImpl implements LikeablePersonRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;

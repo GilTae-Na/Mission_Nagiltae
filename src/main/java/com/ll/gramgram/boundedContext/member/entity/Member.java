@@ -17,11 +17,11 @@ import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+@Entity
+@Getter
+@NoArgsConstructor
 @SuperBuilder
-@NoArgsConstructor // @Builder 붙이면 이거 필수
-@ToString(callSuper = true) // 디버그를 위한
-@Entity // 아래 클래스는 member 테이블과 대응되고, 아래 클래스의 객체는 테이블의 row와 대응된다.
-@Getter // 아래 필드에 대해서 전부다 게터를 만든다. private Long id; => public Long getId() { ... }
+@ToString(callSuper = true)
 public class Member extends BaseEntity {
     private String providerTypeCode; // 일반회원인지, 카카오로 가입한 회원인지, 구글로 가입한 회원인지
     @Column(unique = true)
@@ -39,11 +39,15 @@ public class Member extends BaseEntity {
         grantedAuthorities.add(new SimpleGrantedAuthority("member"));
 
         // username이 admin인 회원은 추가로 admin 권한도 가진다.
-        if ("admin".equals(username)) {
+        if (isAdmin()) {
             grantedAuthorities.add(new SimpleGrantedAuthority("admin"));
         }
 
         return grantedAuthorities;
+    }
+
+    public boolean isAdmin() {
+        return "admin".equals(username);
     }
 
     // 이 회원이 본인의 인스타ID를 등록했는지 안했는지
