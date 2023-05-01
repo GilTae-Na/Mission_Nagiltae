@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-
 @MappedSuperclass
 //공통 매핑 정보가 필요할 때, 부모 클래스에 선언하고
 //속성만 상속 받아서 사용하고 싶을 때 @MappedSuperclass를 사용
@@ -27,7 +26,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 //파라미터가 없는 기본 생성자를 생성
 //@AllArgsConstructor = 생성자가 이미 정의 = 기본 생성자를 자동으로 생성 X.
-
 //@Builder와 @NoArgsConstructor 같이 사용이유
 //빌더 패턴을 사용하려면 객체를 생성하기 위한 파라미터가 없는 기본 생성자가 필요
 @EntityListeners(AuditingEntityListener.class)
@@ -41,8 +39,8 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = IDENTITY)
     //기본 키(PRIMERY) 매핑
     private Long id;
-    @CreatedDate //아래 칼럼에는 값이 자동으로 들어간다(insert 할때)
+    @CreatedDate
     private LocalDateTime createDate;
-    @LastModifiedDate //아래 칼럼에는 값이 자동으로 들어간다(update 할때)
+    @LastModifiedDate
     private LocalDateTime modifyDate;
 }

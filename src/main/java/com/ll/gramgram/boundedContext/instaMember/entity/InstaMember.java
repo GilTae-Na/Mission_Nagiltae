@@ -10,14 +10,22 @@ import org.hibernate.annotations.LazyCollectionOption;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuperBuilder
-@NoArgsConstructor
-@ToString(callSuper = true)//상위 클래스 까지 출력? 위해
 @Entity
 @Getter
-public class InstaMember extends InstaMemberBase{
+@NoArgsConstructor
+@SuperBuilder
+@ToString(callSuper = true)
+public class InstaMember extends InstaMemberBase {
+    @Setter
     @Column(unique = true)
     private String username;
+
+    @Setter
+    @Column(unique = true)
+    private String oauthId;
+
+    @Setter
+    private String accessToken;
 
     @OneToMany(mappedBy = "fromInstaMember", cascade = {CascadeType.ALL})
     @OrderBy("id desc") // 정렬
@@ -96,6 +104,5 @@ public class InstaMember extends InstaMemberBase{
                 .likesCountByGenderWomanAndAttractiveTypeCode2(likesCountByGenderWomanAndAttractiveTypeCode2)
                 .likesCountByGenderWomanAndAttractiveTypeCode3(likesCountByGenderWomanAndAttractiveTypeCode3)
                 .build();
-
     }
 }

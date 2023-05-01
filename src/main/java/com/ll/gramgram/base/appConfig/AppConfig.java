@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 
 @Configuration
 //Bean '구성'을 위한 설정 정보를 담고 있는 클래스라는 뜻
-
 public class AppConfig {
-
     @Getter
     private static long likeablePersonFromMax;
 
@@ -31,5 +29,4 @@ public class AppConfig {
     public static LocalDateTime genLikeablePersonModifyUnlockDate() {
         return LocalDateTime.now().plusSeconds(likeablePersonModifyCoolTime);
     }
-
 }
