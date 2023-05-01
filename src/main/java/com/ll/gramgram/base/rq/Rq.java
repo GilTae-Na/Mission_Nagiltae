@@ -48,7 +48,6 @@ public class Rq {
 
     public boolean isAdmin() {
         if (isLogout()) return false;
-
         return getMember().isAdmin();
     }
 
