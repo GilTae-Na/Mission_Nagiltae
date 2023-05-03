@@ -13,6 +13,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -42,7 +43,12 @@ public class LikeablePerson extends BaseEntity {
 
     // 초 단위에서 올림 해주세요.
     public String getModifyUnlockDateRemainStrHuman() {
-        return "2시간 16분";
+        modifyUnlockDate.plusMinutes(1); // 초단위 올림
+        return modifyUnlockDate.plusMinutes(1).format(DateTimeFormatter.ofPattern("HH:mm"));
+    }
+
+    public void reAssignmentModifyUnlocked(LocalDateTime localDateTime){ //호감 수정시 modifyUnlockDate 재설정하는 메소드
+        this.modifyUnlockDate = localDateTime;
     }
 
     public RsData updateAttractionTypeCode(int attractiveTypeCode) {

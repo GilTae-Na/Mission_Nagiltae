@@ -170,6 +170,10 @@ public class LikeablePersonService {
 
         String newAttractiveTypeDisplayName = likeablePerson.getAttractiveTypeDisplayName();
 
+        //새롭게 modifyunlocktime설정
+        likeablePerson.reAssignmentModifyUnlocked(AppConfig.genLikeablePersonModifyUnlockDate());
+
+
         return RsData.of("S-3", "%s님에 대한 호감사유를 %s에서 %s(으)로 변경합니다.".formatted(username, oldAttractiveTypeDisplayName, newAttractiveTypeDisplayName), likeablePerson);
     }
 
