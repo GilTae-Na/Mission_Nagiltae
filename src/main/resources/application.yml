@@ -42,7 +42,6 @@ spring:
             redirect-uri: '${custom.site.baseUrl}/{action}/oauth2/code/{registrationId}'
             client-authentication-method: client_secret_post
 
-
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
