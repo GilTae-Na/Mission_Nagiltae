@@ -6,7 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration //스프링의 자바 기반 설정 파일
+@Configuration
 public class JpaConfig {
 
     @PersistenceContext

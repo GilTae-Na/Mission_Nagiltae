@@ -8,13 +8,12 @@ import java.time.LocalDateTime;
 
 @Configuration
 public class AppConfig {
-
     @Getter
-    private static long likablePersonFromMax;
+    private static long likeablePersonFromMax;
 
     @Value("${custom.likeablePerson.from.max}")
-    public void setLikablePersonFromMax(long likablePersonFromMax){
-        AppConfig.likablePersonFromMax = likablePersonFromMax;
+    public void setLikeablePersonFromMax(long likeablePersonFromMax) {
+        AppConfig.likeablePersonFromMax = likeablePersonFromMax;
     }
 
     @Getter
@@ -28,5 +27,4 @@ public class AppConfig {
     public static LocalDateTime genLikeablePersonModifyUnlockDate() {
         return LocalDateTime.now().plusSeconds(likeablePersonModifyCoolTime);
     }
-
 }

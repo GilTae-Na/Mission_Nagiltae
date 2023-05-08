@@ -60,3 +60,4 @@ public class Member extends BaseEntity {
         return "%1$4s".formatted(Long.toString(getId(), 36)).replace(' ', '0');
     }
 }
+
