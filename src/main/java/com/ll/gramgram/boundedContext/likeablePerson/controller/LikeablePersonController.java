@@ -16,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/usr/likeablePerson")
@@ -120,18 +122,56 @@ public class LikeablePersonController {
         return rq.redirectWithMsg("/usr/likeablePerson/list", rsData);
     }
 
+
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/toList")
-    public String showToList(Model model) {
+    @GetMapping ("/toList")
+    public String showToList(Model model, String gender, @RequestParam(defaultValue = "0") int attractiveTypeCode, @RequestParam(defaultValue = "1") int sortCode) {
+        //성별, 매력코드, 정렬기준 입력받음
         InstaMember instaMember = rq.getMember().getInstaMember();
 
         // 인스타인증을 했는지 체크
         if (instaMember != null) {
             // 해당 인스타회원이 좋아하는 사람들 목록
-            List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
+            Stream<LikeablePerson> likeablePeopleStream = instaMember.getToLikeablePeople().stream() ;// 나를 좋아하는 사람들
+
+            if (gender != null) {
+                likeablePeopleStream = likeablePeopleStream.filter(e-> e.getFromInstaMember().getGender().equals(gender));
+            }
+
+            if (attractiveTypeCode != 0) {
+                likeablePeopleStream = likeablePeopleStream.filter(e->e.getAttractiveTypeCode() == attractiveTypeCode);
+            }
+
+            switch (sortCode) {
+                case 1:
+                    //최신순
+                    //likeablePeopleStream = likeablePeopleStream.sorted(??);
+                    break;
+                case 2:
+                    //날짜순
+                    // likeablePeopleStream = likeablePeopleStream.sorted(??);
+                    break;
+                case 3:
+                    //인기많은순
+                    // likeablePeopleStream = likeablePeopleStream.sorted(??);
+                    break;
+                case 4:
+                    //인기적은순
+                    // likeablePeopleStream = likeablePeopleStream.sorted(??);
+                    break;
+                case 5:
+                    //성별순
+                    // likeablePeopleStream = likeablePeopleStream.sorted(??);
+                    break;
+                case 6:
+                    //호감사유순
+                    // likeablePeopleStream = likeablePeopleStream.sorted(??);
+                    break;
+
+            }
+            List<LikeablePerson> likeablePeople = likeablePeopleStream.collect(Collectors.toList());
             model.addAttribute("likeablePeople", likeablePeople);
         }
-
         return "usr/likeablePerson/toList";
     }
 }
