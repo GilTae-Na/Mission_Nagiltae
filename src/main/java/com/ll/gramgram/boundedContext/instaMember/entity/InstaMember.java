@@ -31,13 +31,13 @@ public class InstaMember extends InstaMemberBase {
     @OrderBy("id desc") // 정렬
     @LazyCollection(LazyCollectionOption.EXTRA)
     @Builder.Default // @Builder 가 있으면 ` = new ArrayList<>();` 가 작동하지 않는다. 그래서 이걸 붙여야 한다.
-    private List<LikeablePerson> fromLikeablePeople = new ArrayList<>();
+    private List<LikeablePerson> fromLikeablePeople = new ArrayList<>(); //내가 좋아하는 사람 목록
 
     @OneToMany(mappedBy = "toInstaMember", cascade = {CascadeType.ALL})
     @OrderBy("id desc") // 정렬
     @LazyCollection(LazyCollectionOption.EXTRA)
     @Builder.Default // @Builder 가 있으면 ` = new ArrayList<>();` 가 작동하지 않는다. 그래서 이걸 붙여야 한다.
-    private List<LikeablePerson> toLikeablePeople = new ArrayList<>();
+    private List<LikeablePerson> toLikeablePeople = new ArrayList<>(); //나를 좋아하는 사람 목록
 
     public void addFromLikeablePerson(LikeablePerson likeablePerson) {
         fromLikeablePeople.add(0, likeablePerson);
@@ -59,6 +59,12 @@ public class InstaMember extends InstaMemberBase {
         return switch (gender) {
             case "W" -> "여성";
             default -> "남성";
+        };
+    }
+    public int getGenderDisplayNum() {
+        return switch (gender) {
+            case "W" -> 1;
+            default -> 2;
         };
     }
 

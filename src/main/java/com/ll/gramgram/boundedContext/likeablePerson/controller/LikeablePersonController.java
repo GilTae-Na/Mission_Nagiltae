@@ -15,7 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/usr/likeablePerson")
@@ -120,17 +123,20 @@ public class LikeablePersonController {
         return rq.redirectWithMsg("/usr/likeablePerson/list", rsData);
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/toList")
-    public String showToList(Model model) {
-        InstaMember instaMember = rq.getMember().getInstaMember();
 
-        // 인스타인증을 했는지 체크
-        if (instaMember != null) {
-            // 해당 인스타회원이 좋아하는 사람들 목록
-            List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
-            model.addAttribute("likeablePeople", likeablePeople);
-        }
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping ("/toList")
+    public String showToList(Model model, String gender, @RequestParam(defaultValue = "0") int attractiveTypeCode, @RequestParam(defaultValue = "1") int sortCode) {
+        InstaMember instaMember = rq.getMember().getInstaMember();
+        Stream<LikeablePerson> likeablePeopleStream = instaMember.getToLikeablePeople().stream() ;// 나를 좋아하는 사람들
+
+        if (instaMember != null) { // 인스타인증을 했는지 체크
+            likeablePeopleStream= likeablePersonService.filterByGender(likeablePeopleStream, gender);
+            likeablePeopleStream= likeablePersonService.filterByattractiveTypeCode(likeablePeopleStream, attractiveTypeCode);
+            likeablePeopleStream= likeablePersonService.sortBySortCode(likeablePeopleStream, sortCode);
+
+            model.addAttribute("likeablePeople", likeablePeopleStream.collect(Collectors.toList()));
+        } //문제 : 정렬후 다시 전체 선택하면 표시가 안댐
 
         return "usr/likeablePerson/toList";
     }

@@ -20,6 +20,7 @@ public abstract class InstaMemberBase extends BaseEntity {
     long likesCountByGenderWomanAndAttractiveTypeCode1;
     long likesCountByGenderWomanAndAttractiveTypeCode2;
     long likesCountByGenderWomanAndAttractiveTypeCode3;
+
     long likesCountByGenderManAndAttractiveTypeCode1;
     long likesCountByGenderManAndAttractiveTypeCode2;
     long likesCountByGenderManAndAttractiveTypeCode3;
