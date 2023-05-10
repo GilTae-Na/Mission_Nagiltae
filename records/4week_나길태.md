@@ -62,6 +62,19 @@
 재배포 
 이전 재배포 삽질이 도움되서 다행히 인프라 23강 만으로 재배포 했다. 성별 필터링과 호감코드 필터링을 포함하였다.
 
+
+성별 필터링 : 강의중 강사님이 힌트 제공
+- getToInstaMember() 말고 getToInstaMember()사용
+-> getToInstaMember()로 하면 성별이 반대로 나와서 getToInstaMember()로 하니 정상으로 작동
+- member(나) -> instaMember(내 인스타) -> getToLikeablePeople(나를 좋아하는 사람들) -> from(얘가) -> to(나를 좋아해) ->from사용
+-> 양방향 엔티티구조를 잘 이해하자 - 틀릴수도 있음
+-> 주소창에 gender가 매개변수로 들어온다 = gender는 string 이다 = equal로 비교해서 필터링하자
+
+호감코드 필터링 : 강의중 강사님이 힌트 제공
+-> 주소창에 attractiveTypeCode가 매개변수로 들어온다 = attractiveTypeCode는 int 이다, == 로 비교해서 필터링하자
+
+정렬 필터링
+
 성별 필터링 : 강의중 강사님이 힌트 제공
 - getToInstaMember() 말고 getToInstaMember()사용
 -> getToInstaMember()로 하면 성별이 반대로 나와서 getToInstaMember()로 하니 정상으로 작동
