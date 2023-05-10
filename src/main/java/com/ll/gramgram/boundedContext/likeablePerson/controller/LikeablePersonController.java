@@ -133,6 +133,7 @@ public class LikeablePersonController {
         if (instaMember != null) { // 인스타인증을 했는지 체크
             likeablePeopleStream= likeablePersonService.filterByGender(likeablePeopleStream, gender);
             likeablePeopleStream= likeablePersonService.filterByattractiveTypeCode(likeablePeopleStream, attractiveTypeCode);
+            likeablePeopleStream= likeablePersonService.sortBySortCode(likeablePeopleStream, sortCode);
 
             model.addAttribute("likeablePeople", likeablePeopleStream.collect(Collectors.toList()));
         } //문제 : 정렬후 다시 전체 선택하면 표시가 안댐

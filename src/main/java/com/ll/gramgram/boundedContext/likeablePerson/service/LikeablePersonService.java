@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -238,6 +239,40 @@ public class LikeablePersonService {
         if (attractiveTypeCode != 0) {
             //호감코드 기준
             likeablePeopleStream = likeablePeopleStream.filter(e->e.getAttractiveTypeCode() == attractiveTypeCode);
+        }
+
+        return likeablePeopleStream;
+    }
+
+    public Stream<LikeablePerson> sortBySortCode(Stream<LikeablePerson> likeablePeopleStream, int sortCode) {
+
+        switch (sortCode) {
+            case 1:
+                //최신순
+                likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(LikeablePerson::getModifyDate).reversed());
+                break;
+            case 2:
+                //날짜순
+                likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(LikeablePerson::getModifyDate));
+                break;
+            case 3:
+                //인기많은순
+                likeablePeopleStream = likeablePeopleStream.sorted((e2, e1) -> Math.toIntExact(e1.getFromInstaMember().getLikes() - e2.getFromInstaMember().getLikes()));
+                break;
+            case 4:
+                //인기적은순
+                likeablePeopleStream = likeablePeopleStream.sorted((e2, e1) -> Math.toIntExact(e2.getFromInstaMember().getLikes() - e1.getFromInstaMember().getLikes()));
+                break;
+            case 5:
+                //성별순
+                likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparingInt(e2 -> e2.getFromInstaMember().getGenderDisplayNum()));
+                likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(LikeablePerson::getModifyDate).reversed());
+                break;
+            case 6:
+                //호감사유순
+                likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparingInt(LikeablePerson::getAttractiveTypeCode));
+                likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(LikeablePerson::getModifyDate).reversed());
+                break;
         }
 
         return likeablePeopleStream;

@@ -177,4 +177,10 @@ public class InstaMemberService {
 
         return RsData.of("S-5", "인스타계정이 연결되었습니다.", instaMember);
     }
+
+
+    public void countBy(InstaMember instaMember, String oldGender) {
+
+    }
+
 }
