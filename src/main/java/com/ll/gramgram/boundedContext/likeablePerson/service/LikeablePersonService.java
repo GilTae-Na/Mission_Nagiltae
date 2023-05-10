@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -219,5 +221,25 @@ public class LikeablePersonService {
 
 
         return RsData.of("S-1", "호감사유변경이 가능합니다.");
+    }
+
+    public Stream<LikeablePerson> filterByGender(Stream<LikeablePerson> likeablePeopleStream, String gender) {
+
+        if (gender != null) {
+            //남성, 여성 기준
+            likeablePeopleStream = likeablePeopleStream.filter(e-> e.getFromInstaMember().getGender().equals(gender));
+        }
+
+        return likeablePeopleStream;
+    }
+
+    public Stream<LikeablePerson> filterByattractiveTypeCode(Stream<LikeablePerson> likeablePeopleStream, int attractiveTypeCode) {
+
+        if (attractiveTypeCode != 0) {
+            //호감코드 기준
+            likeablePeopleStream = likeablePeopleStream.filter(e->e.getAttractiveTypeCode() == attractiveTypeCode);
+        }
+
+        return likeablePeopleStream;
     }
 }
