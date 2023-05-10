@@ -110,7 +110,7 @@ public class LikeablePersonControllerTests {
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("like"))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test
